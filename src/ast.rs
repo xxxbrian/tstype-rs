@@ -1,9 +1,8 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display, Formatter};
 
 use serde::{Deserialize, Serialize};
-// use serde_json::Result;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub enum TsType {
     Basic(String),
     Array(Box<TsType>),
@@ -11,9 +10,16 @@ pub enum TsType {
     Union(Vec<TsType>),
 }
 
-impl Display for TsType {
+impl Debug for TsType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let pretty_json = serde_json::to_string_pretty(&self).unwrap();
         write!(f, "{}", pretty_json)
+    }
+}
+
+impl Display for TsType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let compact_json = serde_json::to_string(&self).unwrap();
+        write!(f, "{}", compact_json)
     }
 }
