@@ -3,7 +3,7 @@ use regex::Regex;
 
 fn parse_basic(text: &str) -> Option<TsType> {
     let text = text.trim();
-    let re = Regex::new(r"([a-zA-Z]*)").unwrap();
+    let re = Regex::new(r"^([a-zA-Z]*)$").unwrap();
     match re.captures(text) {
         Some(caps) => Some(TsType::Basic(caps[1].to_string())),
         None => None,
