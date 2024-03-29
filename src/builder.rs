@@ -8,8 +8,8 @@ pub fn build(ts_type: TsType) -> String {
             format!("Map<{}, {}>", build(*key_type), build(*value_type))
         }
         TsType::Union(types) => {
-            let mut types_str: Vec<String> = types.into_iter().map(|t| build(t)).collect();
-            types_str.sort_by(|a, b| b.len().cmp(&a.len()));
+            let mut types_str: Vec<String> = types.into_iter().map(build).collect();
+            types_str.sort_by_key(|t| std::cmp::Reverse(t.len()));
             types_str.join(" | ")
         }
     }

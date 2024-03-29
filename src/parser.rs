@@ -4,10 +4,8 @@ use regex::Regex;
 fn parse_basic(text: &str) -> Option<TsType> {
     let text = text.trim();
     let re = Regex::new(r"^([a-zA-Z]*)$").unwrap();
-    match re.captures(text) {
-        Some(caps) => Some(TsType::Basic(caps[1].to_string())),
-        None => None,
-    }
+    re.captures(text)
+        .map(|caps| TsType::Basic(caps[1].to_string()))
 }
 
 fn parse_array_suffix(text: &str) -> Option<TsType> {
@@ -16,10 +14,7 @@ fn parse_array_suffix(text: &str) -> Option<TsType> {
     match re.captures(text) {
         Some(caps) => {
             let inner = parse(&caps[1]);
-            match inner {
-                Some(inner) => Some(TsType::Array(Box::new(inner))),
-                None => None,
-            }
+            inner.map(|inner| TsType::Array(Box::new(inner)))
         }
         None => None,
     }
@@ -31,10 +26,7 @@ fn parse_array_generic(text: &str) -> Option<TsType> {
     match re.captures(text) {
         Some(caps) => {
             let inner = parse(&caps[1]);
-            match inner {
-                Some(inner) => Some(TsType::Array(Box::new(inner))),
-                None => None,
-            }
+            inner.map(|inner| TsType::Array(Box::new(inner)))
         }
         None => None,
     }
@@ -48,10 +40,7 @@ fn parse_map_generic(text: &str) -> Option<TsType> {
             let key = parse(&caps[1]);
             let value = parse(&caps[2]);
             match key {
-                Some(key) => match value {
-                    Some(value) => Some(TsType::Map(Box::new(key), Box::new(value))),
-                    None => None,
-                },
+                Some(key) => value.map(|value| TsType::Map(Box::new(key), Box::new(value))),
                 None => None,
             }
         }
@@ -62,7 +51,7 @@ fn parse_map_generic(text: &str) -> Option<TsType> {
 fn parse_union(text: &str) -> Option<TsType> {
     let text = text.trim();
     // find every | in text
-    let indexs = text.match_indices("|").map(|(i, _)| i).collect::<Vec<_>>();
+    let indexs = text.match_indices('|').map(|(i, _)| i).collect::<Vec<_>>();
     for i in indexs {
         let left_text = text[..i].trim();
         let right_text = text[i + 1..].trim();
