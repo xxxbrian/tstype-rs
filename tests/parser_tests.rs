@@ -187,7 +187,7 @@ fn test_parse_array_generic_with_recursive_s_array() {
 
 #[test]
 fn test_parse_map_generic() {
-    let text = "Map<string, User>";
+    let text = "Record<string, User>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -201,28 +201,28 @@ fn test_parse_map_generic() {
 
 #[test]
 fn test_parse_map_generic_with_missing_characters_outside() {
-    let text = " Map<string, User ";
+    let text = " Record<string, User ";
     let result = parse(text);
     assert!(result.is_none());
 }
 
 #[test]
 fn test_parse_map_generic_with_missing_characters_inside() {
-    let text = " Map<string User> ";
+    let text = " Record<string User> ";
     let result = parse(text);
     assert!(result.is_none());
 }
 
 #[test]
 fn test_parse_map_generic_with_inside_more_than_two() {
-    let text = "Map<string, User, string>";
+    let text = "Record<string, User, string>";
     let result = parse(text);
     assert!(result.is_none());
 }
 
 #[test]
 fn test_parse_map_generic_with_invalid_characters_inside() {
-    let text = "Map<string, User!>";
+    let text = "Record<string, User!>";
     let result = parse(text);
     assert!(result.is_none());
 }
@@ -243,7 +243,7 @@ fn test_parse_map_generic_with_wrong_characters() {
 
 #[test]
 fn test_parse_map_generic_with_recursive_map() {
-    let text = "Map<string, Map<number, User>>";
+    let text = "Record<string, Record<number, User>>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -260,7 +260,7 @@ fn test_parse_map_generic_with_recursive_map() {
 
 #[test]
 fn test_parse_map_generic_with_recursive_g_array() {
-    let text = "Map<string, Array<User>>";
+    let text = "Record<string, Array<User>>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -274,7 +274,7 @@ fn test_parse_map_generic_with_recursive_g_array() {
 
 #[test]
 fn test_parse_map_generic_with_recursive_s_array() {
-    let text = "Map<string, Array<User>[]>";
+    let text = "Record<string, Array<User>[]>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -290,7 +290,7 @@ fn test_parse_map_generic_with_recursive_s_array() {
 
 #[test]
 fn test_parse_union() {
-    let text = "User | Map<string, User>";
+    let text = "User | Record<string, User>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -307,7 +307,7 @@ fn test_parse_union() {
 
 #[test]
 fn test_parse_union_with_multiple_unions() {
-    let text = "User | Map<string, User> | Array<User>";
+    let text = "User | Record<string, User> | Array<User>";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -325,7 +325,7 @@ fn test_parse_union_with_multiple_unions() {
 
 #[test]
 fn test_parse_union_with_recursive() {
-    let text = "User | Map<string, User | string> | Array<User>[]";
+    let text = "User | Record<string, User | string> | Array<User>[]";
     let result = parse(text);
     assert!(result.is_some());
     assert_eq!(
@@ -348,7 +348,7 @@ fn test_parse_union_with_recursive() {
 
 #[test]
 fn test_parse_realcase() {
-    let test = "string|Map<string,Map<number| string|Something, Array<string[][][] | Map<string|number, User[]>>>[][]>[] | number[] | string";
+    let test = "string|Record<string,Record<number| string|Something, Array<string[][][] | Record<string|number, User[]>>>[][]>[] | number[] | string";
     let result = parse(test);
     assert!(result.is_some());
     assert_eq!(result.unwrap().to_string(), "{\"Union\":[{\"Basic\":\"string\"},{\"Array\":{\"Map\":[{\"Basic\":\"string\"},{\"Array\":{\"Array\":{\"Map\":[{\"Union\":[{\"Basic\":\"number\"},{\"Basic\":\"string\"},{\"Basic\":\"Something\"}]},{\"Array\":{\"Union\":[{\"Array\":{\"Array\":{\"Array\":{\"Basic\":\"string\"}}}},{\"Map\":[{\"Union\":[{\"Basic\":\"string\"},{\"Basic\":\"number\"}]},{\"Array\":{\"Basic\":\"User\"}}]}]}}]}}}]}},{\"Array\":{\"Basic\":\"number\"}},{\"Basic\":\"string\"}]}");

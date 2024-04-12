@@ -46,42 +46,42 @@ fn test_build_multiple_complex_array() {
 
 #[test]
 fn test_build_map() {
-    let ts_type = parse("Map<string, User>").unwrap();
+    let ts_type = parse("Record<string, User>").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, User>");
+    assert_eq!(result, "Record<string, User>");
 }
 
 #[test]
 fn test_build_map_with_complex_array() {
-    let ts_type = parse("Map<string, Array<User[]>>").unwrap();
+    let ts_type = parse("Record<string, Array<User[]>>").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, User[][]>");
+    assert_eq!(result, "Record<string, User[][]>");
 }
 
 #[test]
 fn test_build_map_with_complex_array_and_array_wrapper() {
-    let ts_type = parse("Array<Map<string, Array<User>[]>>").unwrap();
+    let ts_type = parse("Array<Record<string, Array<User>[]>>").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, User[][]>[]");
+    assert_eq!(result, "Record<string, User[][]>[]");
 }
 
 #[test]
 fn test_build_union() {
-    let ts_type = parse("User | Map<string, User>").unwrap();
+    let ts_type = parse("User | Record<string, User>").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, User> | User");
+    assert_eq!(result, "Record<string, User> | User");
 }
 
 #[test]
 fn test_build_union_with_multiple_unions() {
-    let ts_type = parse("User | Map<string, User> | Array<User>").unwrap();
+    let ts_type = parse("User | Record<string, User> | Array<User>").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, User> | User[] | User");
+    assert_eq!(result, "Record<string, User> | User[] | User");
 }
 
 #[test]
 fn test_build_realcase() {
-    let ts_type = parse("User[] | Map<string,Map<number| string|Something, Array<string[][][] | Map<string|number, User[]>>>[][]>[] | number[] | string").unwrap();
+    let ts_type = parse("User[] | Record<string,Record<number| string|Something, Array<string[][][] | Record<string|number, User[]>>>[][]>[] | number[] | string").unwrap();
     let result = build(ts_type);
-    assert_eq!(result, "Map<string, Map<Something | number | string, Map<string | number, User[]> | string[][][][]>[][]>[] | number[] | User[] | string");
+    assert_eq!(result, "Record<string, Record<Something | number | string, Record<string | number, User[]> | string[][][][]>[][]>[] | number[] | User[] | string");
 }

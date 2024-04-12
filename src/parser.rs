@@ -34,7 +34,7 @@ fn parse_array_generic(text: &str) -> Option<TsType> {
 
 fn parse_map_generic(text: &str) -> Option<TsType> {
     let text = text.trim();
-    let re = Regex::new(r"^Map<([a-zA-Z| ]*),(.*)>$").unwrap();
+    let re = Regex::new(r"^Record<([a-zA-Z| ]*),(.*)>$").unwrap();
     match re.captures(text) {
         Some(caps) => {
             let key = parse(&caps[1]);
