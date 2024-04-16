@@ -112,6 +112,20 @@ fn test_parse_array_suffix_with_recursive() {
 }
 
 #[test]
+fn test_parse_array_suffix_with_union_inside() {
+    let text = "(User | string)[]";
+    let result = parse(text);
+    assert!(result.is_some());
+    assert_eq!(
+        result.unwrap(),
+        TsType::Array(Box::new(TsType::Union(vec![
+            TsType::Basic("User".to_string()),
+            TsType::Basic("string".to_string())
+        ])))
+    );
+}
+
+#[test]
 fn test_parse_array_generic() {
     let text = "Array<User>";
     let result = parse(text);
@@ -182,6 +196,20 @@ fn test_parse_array_generic_with_recursive_s_array() {
         TsType::Array(Box::new(TsType::Array(Box::new(TsType::Array(Box::new(
             TsType::Basic("User".to_string())
         ))))))
+    );
+}
+
+#[test]
+fn test_parse_array_generic_with_union_inside() {
+    let text = "Array<User | string>";
+    let result = parse(text);
+    assert!(result.is_some());
+    assert_eq!(
+        result.unwrap(),
+        TsType::Array(Box::new(TsType::Union(vec![
+            TsType::Basic("User".to_string()),
+            TsType::Basic("string".to_string())
+        ])))
     );
 }
 
