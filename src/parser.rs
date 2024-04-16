@@ -20,6 +20,19 @@ fn parse_array_suffix(text: &str) -> Option<TsType> {
     }
 }
 
+fn parse_array_suffix_brackets(text: &str) -> Option<TsType> {
+    let text = text.trim();
+    // (string|number)[]
+    let re = Regex::new(r"^\((.*)\)\[\]$").unwrap();
+    match re.captures(text) {
+        Some(caps) => {
+            let inner = parse(&caps[1]);
+            inner.map(|inner| TsType::Array(Box::new(inner)))
+        }
+        None => None,
+    }
+}
+
 fn parse_array_generic(text: &str) -> Option<TsType> {
     let text = text.trim();
     let re = Regex::new(r"^Array<(.*)>$").unwrap();
@@ -106,6 +119,11 @@ pub fn parse(text: &str) -> Option<TsType> {
     let union = parse_union(text);
     if union.is_some() {
         return union;
+    }
+
+    let array_suffix_brackets = parse_array_suffix_brackets(text);
+    if array_suffix_brackets.is_some() {
+        return array_suffix_brackets;
     }
 
     let array_suffix = parse_array_suffix(text);

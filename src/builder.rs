@@ -3,7 +3,10 @@ use crate::ast::TsType;
 pub fn build(ts_type: TsType) -> String {
     match ts_type {
         TsType::Basic(b) => b,
-        TsType::Array(t) => format!("{}[]", build(*t)),
+        TsType::Array(t) => match *t {
+            TsType::Union(_) => format!("({})[]", build(*t)),
+            _ => format!("{}[]", build(*t)),
+        },
         TsType::Map(key_type, value_type) => {
             format!("Record<{}, {}>", build(*key_type), build(*value_type))
         }
