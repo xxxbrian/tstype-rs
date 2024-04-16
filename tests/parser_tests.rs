@@ -34,10 +34,10 @@ fn test_parse_basic_with_invalid_characters() {
 
 #[test]
 fn test_parse_basic_with_spacial_characters() {
-    let text = "Map";
+    let text = "Record";
     let result = parse(text);
     assert!(result.is_some());
-    assert_eq!(result.unwrap(), TsType::Basic("Map".to_string()));
+    assert_eq!(result.unwrap(), TsType::Basic("Record".to_string()));
     let text = "Array";
     let result = parse(text);
     assert!(result.is_some());
@@ -229,14 +229,14 @@ fn test_parse_map_generic_with_invalid_characters_inside() {
 
 #[test]
 fn test_parse_map_generic_with_invalid_characters_outside() {
-    let text = "Map!<string,User>";
+    let text = "Record!<string,User>";
     let result = parse(text);
     assert!(result.is_none());
 }
 
 #[test]
 fn test_parse_map_generic_with_wrong_characters() {
-    let text = "Map[string, User>";
+    let text = "Record[string, User>";
     let result = parse(text);
     assert!(result.is_none());
 }
